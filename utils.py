@@ -1,9 +1,10 @@
 import sqlite3
 
+
 def get_db_connection(db_path):
     """Create and return a database connection."""
     conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row  # Return rows as dictionary objects
+    conn.row_factory = sqlite3.Row
     return conn
 
 
