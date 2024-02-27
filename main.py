@@ -17,10 +17,9 @@ logger = logging.getLogger(__name__)
 @app.route('/fetch-ai-agents', methods=['GET'])
 def fetch_ai_agents():
     user_id = request.args.get('user_id')
-    org_id = request.args.get('org_id')
 
-    if not validate_parameters(user_id, org_id):
-        logger.error("Invalid or missing user_id or org_id in request parameters")
+    if not validate_parameters(user_id):
+        logger.error("Invalid or missing user_id in request parameters")
         return jsonify({"error": "Invalid or missing required parameters: user_id and org_id"}), 400
 
     try:
