@@ -25,5 +25,4 @@ def get_workspace_details_for_user(db_path, user_id):
 
 
 def validate_parameters(user_id):
-    """Validate user_id and org_id parameters for digit only."""
     return user_id.isdigit()
