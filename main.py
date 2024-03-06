@@ -1,34 +1,17 @@
-import json
-import logging
-import jwt
-import requests
-from flask import Flask, request, jsonify
 import os
-from utils import get_workspace_details_for_user, validate_parameters
+import requests
+from dotenv import load_dotenv
+from flask import Flask, request, jsonify
+from logger import logger
+from utils import validate_and_decode_jwt, validate_parameters, get_workspace_details_for_user
 
+load_dotenv()
 app = Flask(__name__)
 
-db_path = os.getenv('DB_PATH', "C:/Users/kyles/PycharmProjects/anything-llm/server/storage/anythingllm.db")
-instance_path = os.getenv('ALLM_URL', "localhost:3001")
-instance_apikey = os.getenv('ALLM_APIKEY', "X92NGQB-S03M9N6-JBWDSSB-BPMKG88")
-jwt_secret_key = os.getenv('JWT_SECRET', "secret")
-
-
-logging.basicConfig(level=logging.INFO,
-                    format=json.dumps({'time': '%(asctime)s', 'level': '%(levelname)s', 'message': '%(message)s'}))
-logger = logging.getLogger(__name__)
-
-
-def validate_and_decode_jwt(token):
-    """Validate and decode the JWT token."""
-    try:
-        decoded_token = jwt.decode(token, jwt_secret_key, algorithms=["HS256"])
-        return decoded_token
-    except jwt.ExpiredSignatureError:
-        logger.error("Token expired")
-    except jwt.InvalidTokenError:
-        logger.error("Invalid token")
-    return None
+db_path = os.getenv('DB_PATH', "default_path_if_not_set")
+instance_path = os.getenv('ALLM_URL', "default_url_if_not_set")
+instance_apikey = os.getenv('ALLM_APIKEY', "default_apikey_if_not_set")
+jwt_secret_key = os.getenv('JWT_SECRET', "default_secret_if_not_set")
 
 
 @app.route('/chat-with-ai-agents', methods=['POST'])
@@ -40,7 +23,7 @@ def chat_with_ai_agent():
         logger.error("No bearer token provided")
         return jsonify({"error": "Authorization header missing or not in Bearer token format"}), 401
 
-    decoded_token = validate_and_decode_jwt(bearer_token)
+    decoded_token = validate_and_decode_jwt(bearer_token, jwt_secret_key)
     if not decoded_token:
         logger.error("Failed to validate or decode JWT token")
         return jsonify({"error": "Invalid or expired token"}), 401
@@ -86,7 +69,7 @@ def fetch_ai_agents():
         logger.error("No bearer token provided")
         return jsonify({"error": "Authorization header missing or not in Bearer token format"}), 401
 
-    decoded_token = validate_and_decode_jwt(bearer_token)
+    decoded_token = validate_and_decode_jwt(bearer_token, jwt_secret_key)
     if not decoded_token:
         logger.error("Failed to validate or decode JWT token")
         return jsonify({"error": "Invalid or expired token"}), 401

@@ -1,4 +1,6 @@
 import sqlite3
+import jwt
+from logger import logger
 
 
 def get_db_connection(db_path):
@@ -26,3 +28,16 @@ def get_workspace_details_for_user(db_path, user_id):
 
 def validate_parameters(user_id):
     return user_id.isdigit()
+
+
+def validate_and_decode_jwt(token, jwt_secret_key):
+    """Validate and decode the JWT token."""
+    try:
+        decoded_token = jwt.decode(token, jwt_secret_key, algorithms=["HS256"])
+        return decoded_token
+    except jwt.ExpiredSignatureError:
+        logger.error("Token expired")
+    except jwt.InvalidTokenError:
+        logger.error("Invalid token")
+    return None
+
