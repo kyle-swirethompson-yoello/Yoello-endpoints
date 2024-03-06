@@ -12,6 +12,8 @@ db_path = os.getenv('DB_PATH', "C:/Users/kyles/PycharmProjects/anything-llm/serv
 instance_path = os.getenv('ALLM_URL', "localhost:3001")
 instance_apikey = os.getenv('ALLM_APIKEY', "X92NGQB-S03M9N6-JBWDSSB-BPMKG88")
 jwt_secret_key = os.getenv('JWT_SECRET', "secret")
+
+
 logging.basicConfig(level=logging.INFO,
                     format=json.dumps({'time': '%(asctime)s', 'level': '%(levelname)s', 'message': '%(message)s'}))
 logger = logging.getLogger(__name__)
@@ -43,23 +45,25 @@ def chat_with_ai_agent():
         logger.error("Failed to validate or decode JWT token")
         return jsonify({"error": "Invalid or expired token"}), 401
     data = request.json
+    convo_history = data['chatHistory']
     ai_agent_slug = data.get('aiAgent')
     query = data.get('query')
     mode = data.get('mode')
     sourceAttribution = data.get('sourceAttribution')
     logger.info(f"Received chat request for AI agent: {ai_agent_slug} with query: {query}")
-
     url = f"http://{instance_path}/api/v1/workspace/{ai_agent_slug}/chat"
     headers = {
         'accept': 'application/json',
         'Authorization': f'Bearer {instance_apikey}',
         'Content-Type': 'application/json'
     }
+    message_payload = query
+    if mode != "query":
+        message_payload = "## previous conversation history: " + str(convo_history) + " ## USERS QUESTIONS: " + query
     payload = {
-        "message": query,
+        "message": message_payload,
         "mode": mode
     }
-
     try:
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()
