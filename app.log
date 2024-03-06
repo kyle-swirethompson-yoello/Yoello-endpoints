@@ -18,3 +18,11 @@
 {"time": "2024-03-06 13:43:03,067", "level": "INFO", "message": " * Restarting with stat"}
 {"time": "2024-03-06 13:43:03,362", "level": "WARNING", "message": " * Debugger is active!"}
 {"time": "2024-03-06 13:43:03,365", "level": "INFO", "message": " * Debugger PIN: 106-981-862"}
+{"asctime": "2024-03-06 15:26:09,000", "levelname": "INFO", "name": "werkzeug", "message": "\u001b[31m\u001b[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.\u001b[0m\n * Running on http://127.0.0.1:5000"}
+{"asctime": "2024-03-06 15:26:09,001", "levelname": "INFO", "name": "werkzeug", "message": "\u001b[33mPress CTRL+C to quit\u001b[0m"}
+{"asctime": "2024-03-06 15:26:09,002", "levelname": "INFO", "name": "werkzeug", "message": " * Restarting with stat"}
+{"asctime": "2024-03-06 15:26:09,887", "levelname": "WARNING", "name": "werkzeug", "message": " * Debugger is active!"}
+{"asctime": "2024-03-06 15:26:09,893", "levelname": "INFO", "name": "werkzeug", "message": " * Debugger PIN: 106-981-862"}
+{"asctime": "2024-03-06 15:26:34,461", "levelname": "INFO", "name": "logger", "message": "Received chat request for AI agent: super-duper-demo with query: what is 7+1"}
+{"asctime": "2024-03-06 15:26:38,806", "levelname": "INFO", "name": "logger", "message": "Successfully received response from AI agent: super-duper-demo"}
+{"asctime": "2024-03-06 15:26:38,806", "levelname": "INFO", "name": "werkzeug", "message": "127.0.0.1 - - [06/Mar/2024 15:26:38] \"POST /chat-with-ai-agents HTTP/1.1\" 200 -"}

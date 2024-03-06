@@ -41,3 +41,20 @@ def validate_and_decode_jwt(token, jwt_secret_key):
         logger.error("Invalid token")
     return None
 
+
+def fetch_first_api_key(db_path):
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        query = "SELECT secret FROM api_keys LIMIT 1"
+        cursor.execute(query)
+        api_key = cursor.fetchone()
+        conn.close()
+
+        if api_key:
+            return api_key[0]
+        else:
+            return None
+    except sqlite3.Error as error:
+        print(f"Error while connecting to sqlite: {error}")
+        return None

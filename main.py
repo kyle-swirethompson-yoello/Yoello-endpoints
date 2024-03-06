@@ -3,15 +3,9 @@ import requests
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from logger import logger
-from utils import validate_and_decode_jwt, validate_parameters, get_workspace_details_for_user
+from utils import validate_and_decode_jwt, validate_parameters, get_workspace_details_for_user, fetch_first_api_key
 
-load_dotenv()
 app = Flask(__name__)
-
-db_path = os.getenv('DB_PATH', "default_path_if_not_set")
-instance_path = os.getenv('ALLM_URL', "default_url_if_not_set")
-instance_apikey = os.getenv('ALLM_APIKEY', "default_apikey_if_not_set")
-jwt_secret_key = os.getenv('JWT_SECRET', "default_secret_if_not_set")
 
 
 @app.route('/chat-with-ai-agents', methods=['POST'])
@@ -35,6 +29,7 @@ def chat_with_ai_agent():
     sourceAttribution = data.get('sourceAttribution')
     logger.info(f"Received chat request for AI agent: {ai_agent_slug} with query: {query}")
     url = f"http://{instance_path}/api/v1/workspace/{ai_agent_slug}/chat"
+    instance_apikey = fetch_first_api_key(db_path)
     headers = {
         'accept': 'application/json',
         'Authorization': f'Bearer {instance_apikey}',
@@ -89,4 +84,8 @@ def fetch_ai_agents():
 
 
 if __name__ == '__main__':
+    load_dotenv()
+    db_path = os.getenv('DB_PATH', "default_path_if_not_set")
+    instance_path = os.getenv('ALLM_URL', "default_url_if_not_set")
+    jwt_secret_key = os.getenv('JWT_SECRET', "default_secret_if_not_set")
     app.run(debug=True)
